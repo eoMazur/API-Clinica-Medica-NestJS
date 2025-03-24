@@ -3,6 +3,7 @@ import { PacienteService } from './paciente.service';
 import { CreatePacienteDto } from './dto/create-paciente.dto';
 import { UpdatePacienteDto } from './dto/update-paciente.dto';
 import { LogInterceptor } from 'src/interceptors/log.interceptor';
+import { ParamId } from 'src/decorators/param-id.decorator';
 
 @Controller('pacientes')
 export class PacienteController {
@@ -20,17 +21,17 @@ export class PacienteController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: Number) {
+  findOne(@ParamId() id: Number) {
     return this.pacienteService.findOne(+id);
   }
 
   @Patch(':id')
-  update(@Param('id', ParseIntPipe) id: Number, @Body() updatePacienteDto: UpdatePacienteDto) {
+  update(@ParamId() id: Number, @Body() updatePacienteDto: UpdatePacienteDto) {
     return this.pacienteService.update(+id, updatePacienteDto);
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: Number) {
+  remove(@ParamId() id: Number) {
     return this.pacienteService.remove(+id);
   }
 }
