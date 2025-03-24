@@ -27,6 +27,8 @@ export class PacienteService {
   }
 
   async findOne(id: number) {
+    await this.verificarPaciente(id);
+
     return this.prisma.paciente.findUnique({
       where: {
         id: id
@@ -51,10 +53,7 @@ export class PacienteService {
 
   async remove(id: number) {
 
-    if(!(await this.verificarPaciente(id))){
-      throw new NotFoundException("Paciente inexistente");
-    }
-
+    await this.verificarPaciente(id);
 
     return this.prisma.paciente.delete({
       where: {
@@ -64,10 +63,13 @@ export class PacienteService {
   }
 
   private async verificarPaciente(id: number){
-      return this.prisma.paciente.findUnique({
-        where: {
-          id: id
-        }
-      })
+    if(!(await this.prisma.paciente.count({
+      where: {
+        id
+      }
+    }))){
+      throw new NotFoundException(`Paciente com ${id} não existe`);
+    }
   }
 }
+ 

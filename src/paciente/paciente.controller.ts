@@ -1,12 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, UseInterceptors } from '@nestjs/common';
 import { PacienteService } from './paciente.service';
 import { CreatePacienteDto } from './dto/create-paciente.dto';
 import { UpdatePacienteDto } from './dto/update-paciente.dto';
+import { LogInterceptor } from 'src/interceptors/log.interceptor';
 
 @Controller('pacientes')
 export class PacienteController {
   constructor(private readonly pacienteService: PacienteService) {}
 
+  //@UseInterceptors(LogInterceptor)
   @Post()
   create(@Body() createPacienteDto: CreatePacienteDto) {
     return this.pacienteService.create(createPacienteDto);
