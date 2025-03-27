@@ -1,4 +1,4 @@
-import { IsEmail, IsString, IsStrongPassword } from "class-validator";
+import { IsEmail, IsString, IsStrongPassword, MaxLength, MinLength, minLength } from "class-validator";
 
 export class CreatePacienteDto {
 
@@ -14,10 +14,12 @@ export class CreatePacienteDto {
     })
     senha: string;
 
-    @IsEmail()
+    @IsEmail(undefined, {message: "O email deve ser válido"})
     email: string;
 
     @IsString()
+    @MinLength(13)
+    @MaxLength(13)
     telefone: string;
 
     @IsString()

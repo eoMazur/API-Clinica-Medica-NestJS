@@ -9,6 +9,7 @@ import { PacienteIdCheckMiddleware } from 'src/middlewares/paciente-id-check.mid
   imports: [PrismaModule],
   controllers: [PacienteController],
   providers: [PacienteService],
+  exports: [PacienteService],
 })
 export class PacienteModule implements NestModule {
 
