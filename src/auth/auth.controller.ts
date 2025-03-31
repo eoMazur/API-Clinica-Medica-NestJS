@@ -4,7 +4,7 @@ import { RegisterDto } from "./dto/auth.register.dto";
 import { ForgetDto } from "./dto/auth.forget.dto";
 import { ResetDto } from "./dto/auth.reset.dto";
 import { AuthService } from "./auth.service";
-import { PacienteService } from "src/usuario/usuario.service";
+import { UsuarioService } from "src/usuario/usuario.service";
 import { AuthGuard } from "src/guards/auth.guard";
 import { DadosPaciente } from "src/decorators/paciente.decorator";
 
@@ -12,7 +12,7 @@ import { DadosPaciente } from "src/decorators/paciente.decorator";
 @Controller('auth')
 export class AuthController {
 
-    constructor(private readonly pacienteService: PacienteService,
+    constructor(private readonly usuarioService: UsuarioService,
         private readonly authService: AuthService
     ){}
 
@@ -24,7 +24,7 @@ export class AuthController {
 
     @Post('register')
     async register(@Body() body: RegisterDto){
-        return this.pacienteService.create(body);
+        return this.usuarioService.create(body);
     }
 
     @Post('forget')
@@ -44,8 +44,8 @@ export class AuthController {
 
     @UseGuards(AuthGuard)
     @Post('me')
-    async me(@DadosPaciente('email') pacienteEmail){
-        return {pacienteEmail}
+    async me(@DadosPaciente('email') usuarioEmail){
+        return {usuarioEmail}
     }
 
 

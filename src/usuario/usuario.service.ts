@@ -15,6 +15,19 @@ export class UsuarioService {
         nome: createUsuarioDto.nome,
         cidade: createUsuarioDto.cidade,
         email: createUsuarioDto.email,
+        cargo: createUsuarioDto.cargo,
+        senha: createUsuarioDto.senha,
+        telefone: createUsuarioDto.telefone
+      }
+    });
+  }
+
+  async createUsuario(createUsuarioDto: CreateUsuarioDto){
+    return this.prisma.usuario.create({
+      data:{
+        nome: createUsuarioDto.nome,
+        cidade: createUsuarioDto.cidade,
+        email: createUsuarioDto.email,
         senha: createUsuarioDto.senha,
         telefone: createUsuarioDto.telefone
       }
@@ -42,6 +55,7 @@ export class UsuarioService {
         cidade: updateUsuarioDto.cidade,
         email: updateUsuarioDto.email,
         senha: updateUsuarioDto.senha,
+        cargo: updateUsuarioDto.cargo,
         telefone: updateUsuarioDto.telefone
       },
       where: {

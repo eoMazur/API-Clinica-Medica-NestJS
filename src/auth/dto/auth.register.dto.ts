@@ -1,5 +1,5 @@
-import { CreatePacienteDto } from "src/usuario/dto/create-usuario.dto";
+import { CreateUsuarioDto } from "src/usuario/dto/create-usuario.dto";
 
-export class RegisterDto extends CreatePacienteDto {
+export class RegisterDto extends CreateUsuarioDto {
     
 }

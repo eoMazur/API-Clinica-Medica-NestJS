@@ -2,7 +2,7 @@ import { forwardRef, MiddlewareConsumer, Module, NestModule, RequestMethod } fro
 import { UsuarioService } from './usuario.service';
 import { UsuarioController } from './usuario.controller';
 import { PrismaModule } from 'src/prisma/prisma.module';
-import { PacienteIdCheckMiddleware } from 'src/middlewares/usuario-id-check.middleware';
+import { UsuarioIdCheckMiddleware } from 'src/middlewares/usuario-id-check.middleware';
 import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
@@ -14,7 +14,7 @@ import { AuthModule } from 'src/auth/auth.module';
 export class PacienteModule implements NestModule {
 
     configure(consumer: MiddlewareConsumer) {
-      consumer.apply(PacienteIdCheckMiddleware).forRoutes({
+      consumer.apply(UsuarioIdCheckMiddleware).forRoutes({
         path:'pacientes/:id',
         method: RequestMethod.ALL
       });

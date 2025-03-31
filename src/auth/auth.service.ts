@@ -1,27 +1,27 @@
 import { BadRequestException, ForbiddenException, Injectable, UnauthorizedException, UseGuards } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
-import { Paciente } from "@prisma/client";
+import { Usuario } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
 import { RegisterDto } from "./dto/auth.register.dto";
-import { PacienteService } from "src/usuario/usuario.service";
+import { UsuarioService } from "src/usuario/usuario.service";
 
 @Injectable()
 export class AuthService{
 
     private expireTime = '30 minutes';
     private issuer = 'ProjetoNest';
-    private audience = 'PACIENTES';
+    private audience = 'USUARIOS';
 
     constructor(private readonly jwtService: JwtService,
          private readonly prisma: PrismaService,
-        private readonly pacienteService: PacienteService){}
+        private readonly usuarioService: UsuarioService){}
 
-    async createToken(paciente: Paciente){
+    async createToken(usuario: Usuario){
         return {
             token: this.jwtService.sign({
-                sub: paciente.id,
-                name: paciente.nome,
-                email: paciente.email,
+                sub: usuario.id,
+                name: usuario.nome,
+                email: usuario.email,
             },
             {
                expiresIn: this.expireTime,
@@ -58,29 +58,29 @@ export class AuthService{
     }
 
     async login(email: string, senha: string){
-        const paciente = await this.prisma.paciente.findFirst({
+        const usuario = await this.prisma.usuario.findFirst({
             where: {
                 email: email,
                 senha: senha
             }
         });
 
-        if(!paciente){
+        if(!usuario){
             throw new ForbiddenException('E-mail e/ou senha incorretos');
         }
 
-        return this.createToken(paciente);
+        return this.createToken(usuario);
     }
 
     async forget(email: string){
 
-        const paciente = await this.prisma.paciente.findFirst({
+        const usuario = await this.prisma.usuario.findFirst({
             where: {
                 email: email
             }
         })
 
-        if(!paciente){
+        if(!usuario){
             throw new ForbiddenException('E-mail e/ou senha incorretos');
         }
 
@@ -94,7 +94,7 @@ export class AuthService{
 
         const id = 0;
 
-       const paciente = await this.prisma.paciente.update({
+       const usuario = await this.prisma.usuario.update({
             where: {
                 id
             },
@@ -103,11 +103,11 @@ export class AuthService{
             }
         })
 
-        return this.createToken(paciente);
+        return this.createToken(usuario);
     }
     
     async register(data: RegisterDto){
-        this.pacienteService.create(data);
+        this.usuarioService.create(data);
     }
 
 }
