@@ -1,6 +1,6 @@
 import { IsEmail, IsString, IsStrongPassword, MaxLength, MinLength, minLength } from "class-validator";
 
-export class CreatePacienteDto {
+export class CreateUsuarioDto {
 
     @IsString()
     nome: string;

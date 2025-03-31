@@ -1,4 +1,4 @@
-import { CreatePacienteDto } from "src/paciente/dto/create-paciente.dto";
+import { CreatePacienteDto } from "src/usuario/dto/create-usuario.dto";
 
 export class RegisterDto extends CreatePacienteDto {
     

@@ -1,13 +1,16 @@
-import { BadRequestException, ForbiddenException, Injectable, UnauthorizedException } from "@nestjs/common";
+import { BadRequestException, ForbiddenException, Injectable, UnauthorizedException, UseGuards } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
-import { Paciente, Prisma } from "@prisma/client";
+import { Paciente } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
 import { RegisterDto } from "./dto/auth.register.dto";
-import { PacienteService } from "src/paciente/paciente.service";
-import { CreatePacienteDto } from "src/paciente/dto/create-paciente.dto";
+import { PacienteService } from "src/usuario/usuario.service";
 
 @Injectable()
 export class AuthService{
+
+    private expireTime = '30 minutes';
+    private issuer = 'ProjetoNest';
+    private audience = 'PACIENTES';
 
     constructor(private readonly jwtService: JwtService,
          private readonly prisma: PrismaService,
@@ -21,20 +24,19 @@ export class AuthService{
                 email: paciente.email,
             },
             {
-               expiresIn: '7 days',
-               issuer: 'ProjetoNest',
-               audience: 'PACIENTES' 
+               expiresIn: this.expireTime,
+               issuer: this.issuer,
+               audience: this.audience 
             }
             )
         };
     }
 
-    async checkToken(token: string){
+    checkToken(token: string){
         try{
-            console.log(token);
             const data = this.jwtService.verify(token, {
-                audience: "PACIENTES",
-                issuer: "ProjetoNest"
+                audience: this.audience,
+                issuer: this.issuer
             })
 
             return data;
@@ -43,6 +45,16 @@ export class AuthService{
             throw new BadRequestException(e);
         }
         
+    }
+
+    isValidToken(token: string){
+        try{
+            this.checkToken(token);
+            return true;
+        }
+        catch(e){
+            return false;
+        }
     }
 
     async login(email: string, senha: string){
@@ -95,8 +107,6 @@ export class AuthService{
     }
     
     async register(data: RegisterDto){
-
-
         this.pacienteService.create(data);
     }
 
