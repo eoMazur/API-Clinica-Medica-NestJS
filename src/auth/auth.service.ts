@@ -111,7 +111,7 @@ export class AuthService{
     }
     
     async register(data: RegisterDto){
-        this.usuarioService.create(data);
+       return await this.usuarioService.createUsuario(data);
     }
 
 }

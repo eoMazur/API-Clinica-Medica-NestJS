@@ -1,17 +1,17 @@
 import { createParamDecorator, ExecutionContext, NotFoundException } from "@nestjs/common";
 
-export const DadosPaciente = createParamDecorator((filter: string, context: ExecutionContext) =>{
+export const DadosUsuario = createParamDecorator((filter: string, context: ExecutionContext) =>{
 
     const request = context.switchToHttp().getRequest();
 
 
 
-    if(request.paciente){
+    if(request.usuario){
         if(filter){
-            return request.paciente[filter];
+            return request.usuario[filter];
         }
         else{
-            return request.paciente;
+            return request.usuario;
         }
     }
     else{

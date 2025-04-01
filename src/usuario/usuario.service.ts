@@ -3,6 +3,7 @@ import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
+import { RegisterDto } from 'src/auth/dto/auth.register.dto';
 
 @Injectable()
 export class UsuarioService {
@@ -12,8 +13,6 @@ export class UsuarioService {
   async create(createUsuarioDto: CreateUsuarioDto) {
 
     const salt = await bcrypt.genSalt();
-
-    console.log({salt});
 
     createUsuarioDto.senha = await bcrypt.hash(createUsuarioDto.senha, salt);
     
@@ -29,14 +28,19 @@ export class UsuarioService {
     });
   }
 
-  async createUsuario(createUsuarioDto: CreateUsuarioDto){
+  async createUsuario(registerDto: RegisterDto){
+
+    const salt = await bcrypt.genSalt();
+
+    registerDto.senha = await bcrypt.hash(registerDto.senha, salt);
+
     return this.prisma.usuario.create({
       data:{
-        nome: createUsuarioDto.nome,
-        cidade: createUsuarioDto.cidade,
-        email: createUsuarioDto.email,
-        senha: createUsuarioDto.senha,
-        telefone: createUsuarioDto.telefone
+        nome: registerDto.nome,
+        cidade: registerDto.cidade,
+        email: registerDto.email,
+        senha: registerDto.senha,
+        telefone: registerDto.telefone
       }
     });
   }
