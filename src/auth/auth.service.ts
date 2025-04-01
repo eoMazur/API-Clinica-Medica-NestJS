@@ -1,9 +1,10 @@
-import { BadRequestException, ForbiddenException, Injectable, UnauthorizedException, UseGuards } from "@nestjs/common";
+import { BadRequestException, ForbiddenException, Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { Usuario } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
 import { RegisterDto } from "./dto/auth.register.dto";
 import { UsuarioService } from "src/usuario/usuario.service";
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService{
@@ -60,12 +61,15 @@ export class AuthService{
     async login(email: string, senha: string){
         const usuario = await this.prisma.usuario.findFirst({
             where: {
-                email: email,
-                senha: senha
+                email: email
             }
         });
 
         if(!usuario){
+            throw new ForbiddenException('E-mail e/ou senha incorretos');
+        }
+
+        if(!await bcrypt.compare(senha, usuario.senha)){
             throw new ForbiddenException('E-mail e/ou senha incorretos');
         }
 
