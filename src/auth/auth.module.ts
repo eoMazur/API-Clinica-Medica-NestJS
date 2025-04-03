@@ -2,7 +2,7 @@ import { forwardRef, Module } from "@nestjs/common";
 import { JwtModule } from "@nestjs/jwt";
 import { AuthService } from "./auth.service";
 import { AuthController } from "./auth.controller";
-import { PacienteModule } from "src/usuario/usuario.module";
+import { UsuarioModule } from "src/usuario/usuario.module";
 import { PrismaModule } from "src/prisma/prisma.module";
 import { FileModule } from "src/file/file.module";
 
@@ -12,7 +12,7 @@ import { FileModule } from "src/file/file.module";
         secret: process.env.JWT_SECRET
 
     }),
-    forwardRef(() => PacienteModule),
+    forwardRef(() => UsuarioModule),
     PrismaModule,
     FileModule],
     providers: [AuthService],

@@ -11,11 +11,11 @@ import { AuthModule } from 'src/auth/auth.module';
   providers: [UsuarioService],
   exports: [UsuarioService],
 })
-export class PacienteModule implements NestModule {
+export class UsuarioModule implements NestModule {
 
     configure(consumer: MiddlewareConsumer) {
       consumer.apply(UsuarioIdCheckMiddleware).forRoutes({
-        path:'pacientes/:id',
+        path:'usuarios/:id',
         method: RequestMethod.ALL
       });
     }

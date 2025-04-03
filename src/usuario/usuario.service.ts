@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service'; 
 import * as bcrypt from 'bcrypt';
-import { RegisterDto } from 'src/auth/dto/auth.register.dto';
+import { RegisterDto } from '../auth/dto/auth.register.dto'; 
 
 @Injectable()
 export class UsuarioService {
@@ -28,7 +28,7 @@ export class UsuarioService {
     });
   }
 
-  async createUsuario(registerDto: RegisterDto){
+  async createPaciente(registerDto: RegisterDto){
 
     const salt = await bcrypt.genSalt();
 
@@ -60,12 +60,14 @@ export class UsuarioService {
   }
 
   async update(id: number, updateUsuarioDto: UpdateUsuarioDto) {
+
+    await this.verificarUsuario(1);
+
     return this.prisma.usuario.update({
       data: {
         nome: updateUsuarioDto.nome,
         cidade: updateUsuarioDto.cidade,
         email: updateUsuarioDto.email,
-        senha: updateUsuarioDto.senha,
         cargo: updateUsuarioDto.cargo,
         telefone: updateUsuarioDto.telefone
       },
@@ -92,7 +94,7 @@ export class UsuarioService {
         id
       }
     }))){
-      throw new NotFoundException(`Paciente com ${id} não existe`);
+      throw new NotFoundException(`Usuário com ${id} não existe`);
     }
   }
 }

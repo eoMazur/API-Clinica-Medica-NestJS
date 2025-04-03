@@ -5,6 +5,8 @@ import { PrismaService } from "src/prisma/prisma.service";
 import { RegisterDto } from "./dto/auth.register.dto";
 import { UsuarioService } from "src/usuario/usuario.service";
 import * as bcrypt from 'bcrypt';
+import { MailerService } from "@nestjs-modules/mailer";
+import { link } from "fs";
 
 @Injectable()
 export class AuthService{
@@ -14,8 +16,9 @@ export class AuthService{
     private audience = 'USUARIOS';
 
     constructor(private readonly jwtService: JwtService,
-         private readonly prisma: PrismaService,
-        private readonly usuarioService: UsuarioService){}
+        private readonly prisma: PrismaService,
+        private readonly usuarioService: UsuarioService,
+        private readonly mailer: MailerService){}
 
     async createToken(usuario: Usuario){
         return {
@@ -88,30 +91,64 @@ export class AuthService{
             throw new ForbiddenException('E-mail e/ou senha incorretos');
         }
 
+        const token = this.jwtService.sign({
+            sub: usuario.id
+        },
+        {
+            expiresIn: '30 minutes',
+            issuer: 'forget',
+            audience: this.audience 
+            
+        });
+
+        await this.mailer.sendMail({
+            subject: 'Recuperação de senha',
+            to: 'murilo@email.com',
+            template: 'forget',
+            context: {
+                name: usuario.nome,
+                token: token
+            }
+        });
+
         return true;
     }
 
     async reset(senha: string, token: string){
 
 
-        //Validar Token
+        try{
+             const data = this.jwtService.verify(token, {
+                issuer: 'forget',
+                audience: this.audience
+            });
 
-        const id = 0;
-
-       const usuario = await this.prisma.usuario.update({
-            where: {
-                id
-            },
-            data: {
-                senha: senha
+           
+            if(isNaN(Number(data.sub))){
+                throw new BadRequestException('Token é inválido.');
             }
-        })
 
-        return this.createToken(usuario);
+            const salt = await bcrypt.genSalt();
+            senha = await bcrypt.hash(senha, salt);
+
+            const usuario = await this.prisma.usuario.update({
+                where: {
+                    id: Number(data.sub)
+                },
+                data: {
+                    senha: senha
+                }
+            })
+    
+            return this.createToken(usuario);
+        }
+        catch(e){
+            throw new BadRequestException(e);
+        }      
     }
     
     async register(data: RegisterDto){
-       return await this.usuarioService.createUsuario(data);
+       return await this.usuarioService.createPaciente(data);
     }
 
 }
