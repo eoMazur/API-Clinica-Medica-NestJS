@@ -1,13 +1,15 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { PacienteModule } from './usuario/usuario.module';
+import { UsuarioModule} from './usuario/usuario.module';
 import { AuthModule } from './auth/auth.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
+import { ConsultaModule } from './consulta/consulta.module';
+import { TipoConsultaModule } from './tipo-consulta/tipo-consulta.module';
 
 @Module({
   imports: [
@@ -19,8 +21,9 @@ import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
         ignoreUserAgents: [/googlebot/gi]
       }
     ]),
-    forwardRef(() => PacienteModule),
+    forwardRef(() => UsuarioModule),
     forwardRef(() => AuthModule),
+    ConsultaModule,
     MailerModule.forRoot({
       transport: {
         host: 'smtp.ethereal.email',
@@ -41,6 +44,8 @@ import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
         },
       },
     }),
+    ConsultaModule,
+    TipoConsultaModule,
     ],
   controllers: [AppController],
   providers: [AppService, {

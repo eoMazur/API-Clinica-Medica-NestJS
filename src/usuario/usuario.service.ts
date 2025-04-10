@@ -4,6 +4,7 @@ import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { PrismaService } from '../prisma/prisma.service'; 
 import * as bcrypt from 'bcrypt';
 import { RegisterDto } from '../auth/dto/auth.register.dto'; 
+import { PaginacaoDto } from '../paginacao/paginacao.dto';
 
 @Injectable()
 export class UsuarioService {
@@ -45,8 +46,16 @@ export class UsuarioService {
     });
   }
 
-  async findAll() {
-    return this.prisma.usuario.findMany();
+  async findAll(paginacao: PaginacaoDto) {
+    console.log(paginacao.limit);
+
+    return this.prisma.usuario.findMany({
+      take: Number(paginacao.limit) || 10,
+      skip: Number(paginacao.offset) || 0,
+      orderBy: {
+        id: 'asc'
+      }
+    });
   }
 
   async findOne(id: number) {

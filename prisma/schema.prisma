@@ -21,7 +21,28 @@ model Usuario{
   cargo Int @default(1)
   telefone String
   cidade String
+  consultas Consulta[]
 
   @@map("usuarios")
 }
 
+model Consulta{
+  id Int @id @default(autoincrement())
+  tipoConsulta TipoConsulta @relation(fields: [idTipoConsulta], references: [id])
+  idTipoConsulta Int
+  paciente Usuario @relation(fields: [pacienteId], references: [id])
+  pacienteId Int
+  descricao String
+  data DateTime
+
+  @@map("consultas")
+}
+
+model TipoConsulta{
+  id Int @id @default(autoincrement())
+  nome String
+  valor Float
+  consultas Consulta[]
+
+  @@map("tipo_consultas")
+}

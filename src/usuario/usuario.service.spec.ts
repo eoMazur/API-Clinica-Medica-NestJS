@@ -7,6 +7,7 @@ import { prismaMock } from "../testing/prisma.service.mock";
 import { createUserDto } from "../testing/create-usuario-dto.mock";
 import { usuarioList } from "../testing/usuario-entity-list.mock";
 import { updateDto } from "../testing/update-usuario-dto.mock";
+import { NotFoundException } from "@nestjs/common";
 
 describe('UsuarioService', () => {
 
@@ -86,6 +87,19 @@ describe('UsuarioService', () => {
             const result = await usuarioService.update(1, updateDto);
 
             expect(result).toEqual(usuarioList[3]);
+        });
+    });
+
+    describe('Delete', () => {
+
+        test('method delete', async () =>{
+
+            prismaService.usuario.count = jest.fn().mockResolvedValue(1);
+            prismaService.usuario.delete = jest.fn().mockResolvedValue(usuarioList[0]);
+
+            const result = await usuarioService.remove(1);
+
+            expect(result).toEqual(usuarioList[0]);
         });
     });
 

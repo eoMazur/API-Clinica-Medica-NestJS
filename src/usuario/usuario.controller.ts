@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, UseInterceptors, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, UseInterceptors, UseGuards, Query, UsePipes } from '@nestjs/common';
 import { UsuarioService } from './usuario.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
@@ -8,6 +8,7 @@ import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from 'src/enums/role.enum';
 import { RoleGuard } from 'src/guards/role.guard';
 import { AuthGuard } from 'src/guards/auth.guard';
+import { PaginacaoDto } from '../paginacao/paginacao.dto';
 
 
 @UseGuards(AuthGuard, RoleGuard)
@@ -23,8 +24,9 @@ export class UsuarioController {
 
   @Roles(Role.Admin)
   @Get()
-  findAll() {
-    return this.usuarioService.findAll();
+  findAll(@Query() paginacao: PaginacaoDto) {
+    console.log(paginacao)
+    return this.usuarioService.findAll(paginacao);
   }
 
   @Roles(Role.Admin, Role.Paciente)
