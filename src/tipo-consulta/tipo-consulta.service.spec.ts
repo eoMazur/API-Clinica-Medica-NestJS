@@ -15,4 +15,10 @@ describe('TipoConsultaService', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
+
+  describe('create', async () =>{
+    test('method create with valid data', () => {
+      
+    })
+  });
 });

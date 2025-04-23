@@ -5,6 +5,9 @@ import { PrismaService } from '../prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { RegisterDto } from '../auth/dto/auth.register.dto'; 
 import { PaginacaoDto } from '../paginacao/paginacao.dto';
+import { Usuario } from '@prisma/client';
+import { plainToInstance } from 'class-transformer';
+import { ResponseUsuarioDto } from './dto/response-usuario.dto';
 
 @Injectable()
 export class UsuarioService {
@@ -47,30 +50,36 @@ export class UsuarioService {
   }
 
   async findAll(paginacao: PaginacaoDto) {
-    console.log(paginacao.limit);
 
-    return this.prisma.usuario.findMany({
+    const usuarios = this.prisma.usuario.findMany({
       take: Number(paginacao.limit) || 10,
       skip: Number(paginacao.offset) || 0,
       orderBy: {
         id: 'asc'
       }
     });
+
+    return (await usuarios).map(usuario => {
+      return plainToInstance(ResponseUsuarioDto, usuario);
+    })
+
   }
 
   async findOne(id: number) {
     await this.verificarUsuario(id);
 
-    return this.prisma.usuario.findUnique({
+    const usuario = await this.prisma.usuario.findUnique({
       where: {
         id: id
       }
     });
+
+    return plainToInstance(ResponseUsuarioDto, usuario);
   }
 
   async update(id: number, updateUsuarioDto: UpdateUsuarioDto) {
 
-    await this.verificarUsuario(1);
+    await this.verificarUsuario(id);
 
     return this.prisma.usuario.update({
       data: {

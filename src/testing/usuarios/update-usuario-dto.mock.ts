@@ -1,4 +1,4 @@
-import { UpdateUsuarioDto } from "../usuario/dto/update-usuario.dto";
+import { UpdateUsuarioDto } from "../../usuario/dto/update-usuario.dto";
 
 export const updateDto:UpdateUsuarioDto = {
     nome: 'nome Atualizado',

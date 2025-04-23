@@ -1,4 +1,4 @@
-export const prismaMock = {
+export const prismaUsuarioMock = {
     usuario: {
       findUnique: jest.fn(),
       findMany: jest.fn(),

@@ -22,10 +22,9 @@ export class UsuarioController {
     return this.usuarioService.create(createUsuarioDto);
   }
 
-  @Roles(Role.Admin)
+  @Roles(Role.Admin, Role.Recepcionista)
   @Get()
   findAll(@Query() paginacao: PaginacaoDto) {
-    console.log(paginacao)
     return this.usuarioService.findAll(paginacao);
   }
 

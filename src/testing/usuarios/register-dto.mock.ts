@@ -1,4 +1,4 @@
-import { RegisterDto } from "../auth/dto/auth.register.dto";
+import { RegisterDto } from "../../auth/dto/auth.register.dto";
 
 export const registerDto: RegisterDto = {
     nome: 'teste',
