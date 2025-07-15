@@ -74,7 +74,24 @@ export class UsuarioService {
       }
     });
 
+
     return plainToInstance(ResponseUsuarioDto, usuario);
+  }
+
+  async findByName(nome: string){
+    await this.verificarUsuarioByName(nome);
+
+    const usuarios = await this.prisma.usuario.findMany({
+      where: {
+        nome: nome
+      }
+    })
+
+    console.log(usuarios)
+
+    return (await usuarios).map(usuario => {
+      return plainToInstance(ResponseUsuarioDto, usuario);
+    })
   }
 
   async update(id: number, updateUsuarioDto: UpdateUsuarioDto) {
@@ -113,6 +130,16 @@ export class UsuarioService {
       }
     }))){
       throw new NotFoundException(`Usuário com ${id} não existe`);
+    }
+  }
+
+  private async verificarUsuarioByName(nome: string){
+    if(!(await this.prisma.usuario.count({
+      where: {
+        nome
+      }
+    }))){
+      throw new NotFoundException(`Usuário com nome: ${nome}, não existe`);
     }
   }
 }

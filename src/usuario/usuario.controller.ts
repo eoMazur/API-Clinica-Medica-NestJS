@@ -9,6 +9,7 @@ import { Role } from 'src/enums/role.enum';
 import { RoleGuard } from 'src/guards/role.guard';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { PaginacaoDto } from '../paginacao/paginacao.dto';
+import { ParamNome } from '../decorators/param-name.decorator';
 
 
 @UseGuards(AuthGuard, RoleGuard)
@@ -32,6 +33,13 @@ export class UsuarioController {
   @Get(':id')
   findOne(@ParamId() id: Number) {
     return this.usuarioService.findOne(+id);
+  }
+
+  @Roles(Role.Admin, Role.Paciente)
+  @Get('/nome/:nome')
+  findByName(@ParamNome() nome: string){
+    console.log(nome)
+    return this.usuarioService.findByName(nome);
   }
 
   @Roles(Role.Admin, Role.Paciente)
